@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require_relative "../lib/vangogh"
+require 'thor'
+
+class VangoghCli < Thor
+  desc "abstract VALUE", "Abstract the given value (e.g., 1234 -> 1200)"
+  def abstract(value)
+    puts Vangogh.abstract(value.to_f)
+  end
+
+  desc "abbreviate VALUE", "Abbreviate the given value (e.g., 1234 -> 1.2k)"
+  def abbreviate(value)
+    puts Vangogh.abbreviate(value.to_f)
+  end
+end
+
+VangoghCli.start

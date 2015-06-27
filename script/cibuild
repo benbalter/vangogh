@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+bundle exec rake spec
+gem build vangogh.gemspec
