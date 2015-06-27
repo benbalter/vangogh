@@ -40,7 +40,7 @@ $ vangogh abstract 1234
 
 $ vangogh abbreviate 12345
 12.3k
-``
+```
 
 ## Contributing
 
