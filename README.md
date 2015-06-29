@@ -13,7 +13,7 @@ Vangogh.abstract 12345
 => 12000
 
 # Abstract and abbreviate
-Vangogh.abbrevaite 1234
+Vangogh.abbreviate 1234
 => "1.2k"
 
 Vangogh.abbreviate 12345
