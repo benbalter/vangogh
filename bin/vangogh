@@ -1,16 +1,62 @@
 #!/usr/bin/env ruby
 require_relative "../lib/vangogh"
 require 'thor'
+require 'csv'
 
 class VangoghCli < Thor
-  desc "abstract VALUE", "Abstract the given value (e.g., 1234 -> 1200)"
+
+  class_option :fields, :type => :array, :desc => "Fields to act on (default: all numeric fields)"
+
+  desc "abstract VALUE|CSV [--fields FIELDS]", "Abstract the given value (e.g., 1234 -> 1200)"
   def abstract(value)
-    puts Vangogh.abstract(value.to_f)
+    if csv?(value)
+      puts process_csv(value, :abstract)
+    else
+      puts Vangogh.abstract(value)
+    end
   end
 
-  desc "abbreviate VALUE", "Abbreviate the given value (e.g., 1234 -> 1.2k)"
+  desc "abbreviate VALUE|CSV [--fields FIELDS]", "Abbreviate the given value (e.g., 1234 -> 1.2k)"
   def abbreviate(value)
-    puts Vangogh.abbreviate(value.to_f)
+    if csv?(value)
+      puts process_csv(value, :abbreviate)
+    else
+      puts Vangogh.abbreviate(value)
+    end
+  end
+
+  private
+
+  no_commands do
+    def read_csv(csv)
+      CSV.read(csv, :headers => true)
+    end
+
+    def process_csv(path, process)
+      raise ArgumentError unless [:abstract, :abbreviate].include?(process)
+      fields = options["fields"] || []
+
+      csv = CSV.generate do |output|
+        input = read_csv(path)
+        input.each do |row|
+          output_row = []
+          output << input.headers
+          row.each do |key, value|
+            if (fields.empty? || fields.include?(key.strip)) && Vangogh.numeric?(value)
+              output_row.push Vangogh.send(process, value)
+            else
+              output_row.push value
+            end
+          end
+          output << output_row
+        end
+      end
+      csv
+    end
+
+    def csv?(value)
+      value =~ /\.csv$/ && File.exists?(value)
+    end
   end
 end
 

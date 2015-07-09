@@ -4,7 +4,11 @@ module Vangogh
     attr_accessor :value
 
     def initialize(value)
-      @value = value
+      if value.is_a?(String)
+        @value = value.strip.to_f
+      else
+        @value = value
+      end
     end
 
     def abstract

@@ -11,5 +11,9 @@ module Vangogh
     def abbreviate(value)
       Number.new(value).abbreviate
     end
+
+    def numeric?(text)
+      !!(text.to_s.strip =~ /\A[\d\,.]+\z/)
+    end
   end
 end
