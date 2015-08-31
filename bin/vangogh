@@ -38,9 +38,9 @@ class VangoghCli < Thor
 
       csv = CSV.generate do |output|
         input = read_csv(path)
+        output << input.headers
         input.each do |row|
           output_row = []
-          output << input.headers
           row.each do |key, value|
             if (fields.empty? || fields.include?(key.strip)) && Vangogh.numeric?(value)
               output_row.push Vangogh.send(process, value)
